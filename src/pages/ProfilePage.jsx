@@ -9,7 +9,7 @@ import {
 import { useFavorites } from "../hooks/useFavorites";
 import FavoriteButton from "../components/common/FavoriteButton";
 
-export default function ProfilePage({ onNavigate, onBack }) {
+export default function ProfilePage({ onRecipeClick }) {
   const initialProfile = getUserProfile();
 
   const [username, setUsername] = useState(initialProfile.username);
@@ -19,7 +19,7 @@ export default function ProfilePage({ onNavigate, onBack }) {
 
   const fileInputRef = useRef(null);
 
-  // Favorites (useFavorites returns { favorites, loading, error, refetch })
+  // Favorites
   const { favorites, loading, error, refetch } = useFavorites();
 
   // Upload avatar
@@ -43,7 +43,7 @@ export default function ProfilePage({ onNavigate, onBack }) {
     setEditingName(false);
   };
 
-  // filter favorites by tab
+  // Filter favorites by tab
   const filtered = favorites.filter((f) => {
     if (tab === "all") return true;
     return (f.category || "").toLowerCase() === tab;
@@ -163,21 +163,22 @@ export default function ProfilePage({ onNavigate, onBack }) {
                 key={item.id}
                 className="relative bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden"
               >
-                {/* Favorite button overlay */}
+                {/* Favorite Button */}
                 <div className="absolute top-3 right-3 z-20">
                   <FavoriteButton
                     recipeId={item.id}
                     size="md"
                     onToggle={async () => {
-                      // refresh favorites after toggle
-                      try { await refetch(); } catch (e) { /* ignore */ }
+                      try {
+                        await refetch();
+                      } catch {}
                     }}
                   />
                 </div>
 
-                {/* Card clickable => navigate to detail */}
+                {/* Card Click → navigate to recipe detail */}
                 <div
-                  onClick={() => onNavigate && onNavigate("recipe-detail", { id: item.id })}
+                  onClick={() => onRecipeClick(item.id, item.category)}
                   className="cursor-pointer"
                 >
                   <img
