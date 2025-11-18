@@ -19,7 +19,6 @@ export default function ProfilePage({ onRecipeClick }) {
 
   const fileInputRef = useRef(null);
 
-  // Favorites
   const { favorites, loading, error, refetch } = useFavorites();
 
   // Upload avatar
@@ -43,7 +42,7 @@ export default function ProfilePage({ onRecipeClick }) {
     setEditingName(false);
   };
 
-  // Filter favorites by tab
+  // filter favorites by tab
   const filtered = favorites.filter((f) => {
     if (tab === "all") return true;
     return (f.category || "").toLowerCase() === tab;
@@ -52,9 +51,11 @@ export default function ProfilePage({ onRecipeClick }) {
   return (
     <div className="min-h-screen bg-slate-50 pb-24 md:pb-4">
       <div className="max-w-6xl mx-auto px-4 py-8">
+        
         {/* PROFILE HEADER */}
         <div className="bg-white rounded-3xl p-6 shadow-md border border-slate-200 mb-8">
           <div className="flex items-center gap-6">
+            
             {/* Avatar */}
             <div className="relative">
               <img
@@ -129,6 +130,7 @@ export default function ProfilePage({ onRecipeClick }) {
           >
             Semua
           </button>
+
           <button
             onClick={() => setTab("makanan")}
             className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -137,6 +139,7 @@ export default function ProfilePage({ onRecipeClick }) {
           >
             Makanan
           </button>
+
           <button
             onClick={() => setTab("minuman")}
             className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -158,6 +161,7 @@ export default function ProfilePage({ onRecipeClick }) {
           <p className="text-slate-500">Belum ada resep favorit.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
             {filtered.map((item) => (
               <div
                 key={item.id}
@@ -169,16 +173,17 @@ export default function ProfilePage({ onRecipeClick }) {
                     recipeId={item.id}
                     size="md"
                     onToggle={async () => {
-                      try {
-                        await refetch();
-                      } catch {}
+                      try { await refetch(); } catch { }
                     }}
                   />
                 </div>
 
-                {/* Card Click → navigate to recipe detail */}
+                {/* CARD → NAVIGATE TO DETAIL */}
                 <div
-                  onClick={() => onRecipeClick(item.id, item.category)}
+                  onClick={() =>
+                    onRecipeClick &&
+                    onRecipeClick(item.id, item.category)
+                  }
                   className="cursor-pointer"
                 >
                   <img
@@ -209,6 +214,7 @@ export default function ProfilePage({ onRecipeClick }) {
                 </div>
               </div>
             ))}
+
           </div>
         )}
       </div>
